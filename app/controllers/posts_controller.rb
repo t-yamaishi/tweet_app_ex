@@ -28,10 +28,14 @@ class PostsController < ApplicationController
 
   def create
     @post = Post.new(post_params)
-    if @post.save
-      redirect_to new_post_path
-    else
+    if params[:back]
       render :new
+    else
+      if @post.save
+        redirect_to new_post_path
+      else
+        render :new
+      end
     end
   end
 
@@ -39,6 +43,11 @@ class PostsController < ApplicationController
     set_post
     @post.destroy
     redirect_to posts_path
+  end
+
+  def confirm
+    @post = Post.new(post_params)
+    render :new if @post.invalid?
   end
 
   private
